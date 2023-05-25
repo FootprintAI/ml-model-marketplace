@@ -1,0 +1,4 @@
+argparse >= 1.4.0
+lime >= 0.2.0.1
+nest_asyncio>=1.4.0
+cvxpy == 1.1.13
