@@ -1,17 +1,15 @@
-FROM python:3.7-slim
+FROM python:3.9-slim
 
-COPY third_party third_party
+RUN apt-get update && \
+    apt-get install git -y
 
-COPY kserve kserve
-COPY VERSION VERSION
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir kserve==v0.10.1 && \
+    pip install git+https://github.com/Trusted-AI/AIX360.git@b48a3be3befd4c365a7b189808a9c99257800c68
 
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -e ./kserve
+COPY aixserver/requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apt update && apt install -y build-essential
-COPY aixexplainer aixexplainer
-RUN pip install --no-cache-dir -e ./aixexplainer
-RUN apt remove -y build-essential
+COPY . .
 
-RUN useradd kserve -m -u 1000 -d /home/kserve
-USER 1000
 ENTRYPOINT ["python", "-m", "aixserver"]
