@@ -77,6 +77,7 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
         """ _predict send $input_im into the underlying predictor.
         Each input would be wrapped with {"image_bytes": {"b64": $b64str}, "key": $key}
         And the output from prediction is {"scores": $list_of_scores_for_each_class, "prediction": $predict_class, "key": $key}
+        or {[$list_of_scores_for_each_class]}
         we use _wrap_numpyarr_to_predict_inputs to wrap the input
 
         """
@@ -97,14 +98,19 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
         #            "key": "1"
         #        }
         #    ]
-        #}
-        num_classes = len(predictions[0]["scores"])
-        num_samples = len(predictions)
-        ## class_preds is in such shape:
-        ## [ [sample_1_to_class_1, sample_1_to_class_2, ...] [sample_2_to_class_1, ], ... ]
-        class_preds = [[] for x in range(0, num_samples)]
-        for sample_index in range(0, num_samples):
-                class_preds[sample_index] = predictions[sample_index]["scores"]
+        #
+        # or output: "predictions":[
+        #        {
+        #            [1.47944235e-07, 3.65586068e-08, 0.796582818, 1.05895253e-07, 0.203416958, 3.8090274e-08],
+        #        }
+        #]
+        for sample_inx in range(0, len(predictions)):
+            print('{}:{}'.format(sample_inx, predictions[sample_inx]))
+
+        class_preds = [ sample_against_all['scores'] if
+                               'scores' in sample_against_all else
+                               sample_against_all for
+                               sample_against_all in predictions]
         return np.array(class_preds)
 
     def _wrap_numpyarr_to_predict_inputs(self, input_im: np.ndarray):
