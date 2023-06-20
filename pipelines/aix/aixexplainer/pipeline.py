@@ -76,17 +76,20 @@ spec:
       image: tensorflow/serving:2.8.0
       resources:
         limits:
-          cpu: 1
-          memory: 8Gi
-          #nvidia.com/gpu: 1
+          cpu: "1"
+          memory: "8Gi"
+          nvidia.com/gpu: "1"
         requests:
-          cpu: 1
-          memory: 8Gi
-          #nvidia.com/gpu: 1
+          cpu: "1"
+          memory: "8Gi"
+          nvidia.com/gpu: "1"
+      env:
+      - name: TF_FORCE_GPU_ALLOW_GROWTH
+        value: "true"
   explainer:
     containers:
     - name: explainer
-      image: reg.footprint-ai.com/public/aix-aixexplainer:{3}
+      image: footprintai/aix-aixexplainer:{3}
       args:
       - --model_name
       - {0}
@@ -102,13 +105,13 @@ spec:
       resources:
         limits:
           cpu: "1"
-          memory: 2Gi
+          memory: "2Gi"
         requests:
           cpu: "1"
-          memory: 2Gi
+          memory: "2Gi"
 '''.format(model_name, namespace, model_pvc_uri, runtime_version)
         ks = kserve_op(
             action=action,
             inferenceservice_yaml=isvc_yaml
         )
-        ks.set_cpu_request("1").set_cpu_limit("1").set_memory_request("1G").set_memory_limit("1G")
+        ks.set_cpu_request("100m").set_cpu_limit("1").set_memory_request("1G").set_memory_limit("1G")
