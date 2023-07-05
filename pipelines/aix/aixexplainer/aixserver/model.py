@@ -174,7 +174,7 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
                 for i in range(0, top_labels):
                     temp, mask = explanation.get_image_and_mask(explanation.top_labels[i],
                                                                 positive_only=positive_only,
-                                                                num_features=100,
+                                                                num_features=10,
                                                                 hide_rest=False,
                                                                 min_weight=min_weight)
                     explained_imageb64_list.append({
