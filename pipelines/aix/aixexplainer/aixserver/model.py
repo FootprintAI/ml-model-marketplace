@@ -50,6 +50,22 @@ def normalize(im):
 
     return cv2.normalize(im, None, 0, 255, cv2.NORM_MINMAX)
 
+def resize(im, size=(240,320)):
+    import cv2
+
+    h, w, channels = im.shape
+    aspect_ratio = h/w
+
+    target_height, target_width = size
+    golden_ratio = target_height / target_width
+    new_height, new_width = size
+    if aspect_ratio > golden_ratio:
+        new_width = int(new_height / aspect_ratio)
+    else:
+        new_height = int(new_width * aspect_ratio)
+
+    return cv2.resize(im, (new_width, new_height), interpolation = cv2.INTER_NEAREST)
+
 
 class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
     def __init__(self, name: str, predictor_host: str, segm_alg: str, num_samples: str,
@@ -141,12 +157,18 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
             min_weight = (float(payload['min_weight'])
                           if "min_weight" in payload else
                           self.min_weight)
+            explaim_image_width = (float(payload['explain_image_width'])
+                          if 'explain_image_width' in payload else
+                          320)
+            explaim_image_height = (float(payload['explain_image_height'])
+                          if 'explain_image_height' in payload else
+                          240)
         except Exception as err:
             raise Exception("Failed to specify parameters: %s", (err,))
 
         try:
             if str.lower(self.explainer_type) == "limeimages":
-                input_im = self._get_instance_binary_inputs(instances[0])
+                input_im = self._get_instance_binary_inputs(instances[0], (explaim_image_height, explaim_image_width))
                 inputs = np.array(input_im)
                 logging.info(
                     "Calling explain on image of shape %s", (inputs.shape,))
@@ -204,13 +226,13 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
         except Exception as err:
             raise Exception("Failed to explain %s" % err)
 
-    def _get_instance_binary_inputs(self, first_instance):
+    def _get_instance_binary_inputs(self, first_instance, preferred_size):
         """ _get_instance_binary_inputs converts b64 encoded instance's
         imagebytes into numpy.array
         """
 
         if isinstance(first_instance, dict) and "image_bytes" in first_instance and "b64" in first_instance["image_bytes"]: # first_instance = {"image_bytes": {"b64":xxx}}
             logging.info("first instance is dict and has b64, coverting")
-            return base64decode(first_instance["image_bytes"]["b64"])
+            return resize(base64decode(first_instance["image_bytes"]["b64"]), preferred_size)
 
         return first_instance
