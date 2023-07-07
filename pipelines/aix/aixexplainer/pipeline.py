@@ -71,6 +71,8 @@ metadata:
   serving.kserve.io/targetUtilizationPercentage: "80"
 spec:
   predictor:
+    minReplicas: 0
+    maxReplicas: 1
     tensorflow:
       storageUri: {2}
       image: tensorflow/serving:2.8.0
@@ -87,6 +89,8 @@ spec:
       - name: TF_FORCE_GPU_ALLOW_GROWTH
         value: "true"
   explainer:
+    minReplicas: 0
+    maxReplicas: 2
     containers:
     - name: explainer
       image: footprintai/aix-aixexplainer:{3}
