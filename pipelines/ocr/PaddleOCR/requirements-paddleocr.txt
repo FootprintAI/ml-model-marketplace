@@ -1,0 +1,1 @@
+paddleocr @ git+https://github.com/PaddlePaddle/PaddleOCR.git@8967e633929cd38e03f72fa1658f49adc4330178
