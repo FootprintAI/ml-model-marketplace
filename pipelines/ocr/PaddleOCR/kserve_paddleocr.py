@@ -74,8 +74,10 @@ class PaddleOCRModel(kserve.Model):
         im1 = base64decode(inputs[0]["image_bytes"]["b64"])
         key = inputs[0]["key"]
         result = self.app.ocr(im1, cls=True)
+        # [[[[[371.0, 306.0], [673.0, 310.0], [671.0, 455.0], [369.0, 451.0]], ('SEE', 0.5028034448623657)], [[[419.0, 560.0], [615.0, 560.0], [615.0, 597.0], [419.0, 597.0]], ('HING KEE', 0.980820894241333)], [[[379.0, 621.0], [654.0, 621.0], [654.0, 653.0], [379.0, 653.0]], ('RESTAURANT', 0.9898968935012817)]]]
+        result = result[0]
 
-        if not result or not result[0]:
+        if not result:
             return {
                 "predictions": [
                 {
@@ -88,9 +90,12 @@ class PaddleOCRModel(kserve.Model):
                 }, ]
             }
 
-        boxes = [line[0] for res in result for line in res]
-        txts = [line[1][0] for res in result for line in res]
-        scores = [line[1][1] for res in result for line in res]
+        boxes = [line[0] for line in result]
+        # [[[371.0, 306.0], [673.0, 310.0], [671.0, 455.0], [369.0, 451.0]], [[419.0, 560.0], [615.0, 560.0], [615.0, 597.0], [419.0, 597.0]], [[379.0, 621.0], [654.0, 621.0], [654.0, 653.0], [379.0, 653.0]]]
+        txts = [line[1][0] for line in result]
+        # ['SEE', 'HING KEE', 'RESTAURANT']
+        scores = [line[1][1] for line in result]
+        # [0.5028034448623657, 0.980820894241333, 0.9898968935012817]
         text_and_position = []
         for i in range(len(boxes)):
             text_and_position.append({
@@ -98,7 +103,6 @@ class PaddleOCRModel(kserve.Model):
                 'position': boxes[i],
                 'score': scores[i],
             })
-
         drawed_im = draw_ocr(im1, boxes, txts, scores, font_path='./fonts/simfang.ttf')
         drawed_im_str = base64encode(drawed_im)
 
