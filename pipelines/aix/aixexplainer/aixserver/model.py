@@ -120,8 +120,8 @@ class AIXModel(kserve.Model):  # pylint:disable=c-extension-no-member
         #            [1.47944235e-07, 3.65586068e-08, 0.796582818, 1.05895253e-07, 0.203416958, 3.8090274e-08],
         #        }
         #]
-        for sample_inx in range(0, len(predictions)):
-            print('{}:{}'.format(sample_inx, predictions[sample_inx]))
+        #for sample_inx in range(0, len(predictions)):
+        #    print('{}:{}'.format(sample_inx, predictions[sample_inx]))
 
         class_preds = [ sample_against_all['scores'] if
                                'scores' in sample_against_all else
