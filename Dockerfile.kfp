@@ -3,3 +3,7 @@ FROM python:3.9.16
 RUN apt-get update && \
     pip3 install --upgrade pip && \
     pip3 install kfp==1.8.9 urllib3==1.26.15 requests-toolbelt==0.10.1
+
+WORKDIR /app-script
+
+COPY gen-manifests.py gen-manifests.sh /app-script

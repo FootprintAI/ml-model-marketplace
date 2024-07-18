@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: insightface-kfserving-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2023-07-08T17:53:39.396203',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2024-07-18T02:19:36.906387',
     pipelines.kubeflow.org/pipeline_spec: '{"inputs": [{"default": "apply", "name":
       "action", "optional": true}, {"default": "", "name": "model_name", "optional":
       true}, {"default": "", "name": "model_uri", "optional": true}, {"default": "kubeflow-user-example-com",

@@ -8,6 +8,7 @@ def lookup_pipeline_py(source_folder: str):
     import glob
 
     lookup_pattern = "{}/**/*pipeline.py".format(source_folder)
+    print("lookup pattern:", lookup_pattern)
     return glob.glob(lookup_pattern, recursive=True)
 
 def dynamic_import_and_compile(pipeline_path: str, manifest_path:str):
@@ -23,12 +24,20 @@ def dynamic_import_and_compile(pipeline_path: str, manifest_path:str):
 
     kfp.compiler.Compiler().compile(foo.kfservingPipeline, manifest_path)
 
-def main():
+def main(prefix: str):
+    print("prefix:", prefix)
     import os
-    pipeline_path_list = lookup_pipeline_py("pipelines")
+    pipeline_path_list = lookup_pipeline_py(os.path.join(prefix, "pipelines"))
     for pipeline_path in pipeline_path_list:
         manifest_path = os.path.splitext(pipeline_path)[0]+'.yaml'
         dynamic_import_and_compile(pipeline_path, manifest_path)
 
+import argparse
+parser = argparse.ArgumentParser(
+    prog='pipeline manifest generator',
+    description='generate kubeflow pipeline manifest')
+parser.add_argument("--appdir", help="app dir", dest="appdir",
+                     default="./")
 if __name__ == '__main__':
-    main()
+    args = parser.parse_args()
+    main(args.appdir)
