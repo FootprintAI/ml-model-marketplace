@@ -68,10 +68,10 @@ def kfservingPipeline(
           resources:
             limits:
               memory: "1Gi"
-              cpu: "1"
+              cpu: "100m"
             requests:
               memory: "1Gi"
-              cpu: "1"
+              cpu: "100m"
           env:
             - name: DEFAULT_MODEL_NAME
               value: {0}

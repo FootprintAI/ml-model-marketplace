@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: kfserving-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2023-05-09T06:16:26.080213',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2024-07-18T02:19:36.085741',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline for KFServing.",
       "inputs": [{"default": "apply", "name": "action", "optional": true}, {"default":
       "yolov7", "name": "model_name", "optional": true}, {"default": "https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt",

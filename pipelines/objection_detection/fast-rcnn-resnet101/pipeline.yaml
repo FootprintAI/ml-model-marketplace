@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: kfserving-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2023-05-09T06:16:25.719051',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2024-07-18T02:19:36.415496',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline for KFServing.",
       "inputs": [{"default": "apply", "name": "action", "optional": true}, {"default":
       "tensorflow-sample", "name": "model_name", "optional": true}, {"default": "http://download.tensorflow.org/models/object_detection/tf2/20200711/faster_rcnn_resnet101_v1_800x1333_coco17_gpu-8.tar.gz",
