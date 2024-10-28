@@ -5,5 +5,5 @@ kfp:
 
 gen-manifests:
 	docker run -v $(PWD):/app \
-		--entrypoint /app/gen-manifests.sh \
+		--entrypoint /app-script/gen-manifests.sh \
 		footprintai/kfp-compiler:0.1.0
